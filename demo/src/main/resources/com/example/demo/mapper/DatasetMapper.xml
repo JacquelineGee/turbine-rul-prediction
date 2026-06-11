@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.DatasetMapper">
+    <select id="selectDataset" resultType="com.example.demo.pojo.Dataset">
+        SELECT
+        a.dataset_id, a.dataset_name, a.dataset_url, a.update_time, a.upload_user_id, b.user_name
+        FROM
+        powersystem.dataset a,powersystem.user b
+        <!-- 以下是添加的动态查询条件部分 -->
+        <where>
+            <if test="datasetName != null and datasetName != ''">
+                AND dataset_name LIKE CONCAT('%', #{datasetName}, '%')
+            </if>
+            <if test="uploadUserId != null and uploadUserId != ''">
+                AND upload_user_id LIKE CONCAT('%', #{uploadUserId}, '%')
+            </if>
+            <if test="updateTimeStart != null and updateTimeStart != '' and updateTimeEnd != null and updateTimeEnd != ''">
+                AND DATE_FORMAT(update_time, '%Y-%m-%d') BETWEEN #{updateTimeStart} AND #{updateTimeEnd}
+            </if>
+                AND a.upload_user_id=b.user_id
+        </where>
+        order by a.update_time desc
+    </select>
+</mapper>

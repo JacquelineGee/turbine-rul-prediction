@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.OperationLogMapper">
+
+    <insert id="insert" parameterType="com.example.demo.pojo.OperationLog"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_operation_log (
+            user_id, username, operation, method, params, ip,
+            status, error_msg, operation_time, execution_time, module
+        ) VALUES (
+                     #{userId}, #{username}, #{operation}, #{method}, #{params}, #{ip},
+                     #{status}, #{errorMsg}, #{operationTime}, #{executionTime}, #{module}
+                 )
+    </insert>
+
+    <select id="selectLogList" parameterType="map" resultType="com.example.demo.pojo.OperationLog">
+        SELECT * FROM sys_operation_log
+        <where>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="operation != null and operation != ''">
+                AND operation = #{operation}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="module != null and module != ''">
+                AND module = #{module}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="beginTime != null">
+                AND operation_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                AND operation_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY operation_time DESC
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="countLogList" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM sys_operation_log
+        <where>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="operation != null and operation != ''">
+                AND operation = #{operation}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="module != null and module != ''">
+                AND module = #{module}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="beginTime != null">
+                AND operation_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                AND operation_time &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+    <select id="ModelUseTimes" resultType="com.example.demo.pojo.Model">
+        SELECT * From model
+    </select>
+    <select id="UserNum" resultType="java.lang.Integer">
+        SELECT count(*) FROM user
+    </select>
+    <select id="NewestUser" resultType="java.lang.String">
+        SELECT user_name FROM user
+        ORDER BY updtime DESC
+        LIMIT 1
+    </select>
+    <select id="LoginTimes" resultType="com.example.demo.pojo.LoginTime">
+        SELECT count(*) as times,logindate From (SELECT method, date(operation_time) as logindate from sys_operation_log) as a
+        where a.method='login'
+        group by a.logindate
+        having a.logindate >= CURRENT_DATE() - INTERVAL 6 DAY
+        ORDER BY a.logindate
+    </select>
+    <select id="getLogList" resultType="com.example.demo.pojo.OperationLog">
+        SELECT * FROM sys_operation_log
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND user_id LIKE CONCAT('%', #{userId}, '%')
+            </if>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="operation != null and operation != ''">
+                AND operation LIKE CONCAT('%', #{operation}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="module != null and module != ''">
+                AND module LIKE CONCAT('%', #{module}, '%')
+            </if>
+            <if test="startTime != null and startTime != ''">
+                AND operation_time >= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND operation_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY operation_time DESC
+    </select>
+</mapper>

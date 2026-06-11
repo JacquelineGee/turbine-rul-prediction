@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.roleMapper">
+    <insert id="addPower">
+        insert into power
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            power_id,
+            power_name,
+            <if test="faPowerId!= null and faPowerId!= ''">
+                fa_power_id,
+            </if>
+            updtime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{powerId},
+            #{powerName},
+            <if test="faPowerId!= null and faPowerId!= ''">
+                #{faPowerId},
+            </if>
+            now()
+        </trim>
+    </insert>
+    <insert id="addRole">
+        insert into role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            role_name,
+            <if test="roleId!= null and roleId!= ''">
+            role_id
+            </if>
+            updtime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{roleName},
+            <if test="roleId!= null and roleId!= ''">
+                #{roleId},
+            </if>
+        now()
+        </trim>
+    </insert>
+    <update id="updRolePower">
+        {call update_role_powers(#{roleId}, #{powerIds})}
+    </update>
+
+    <select id="roleUpd" statementType="CALLABLE">
+        {call insert_user_roles(#{userId}, #{roleIds})}
+    </select>
+    <select id="quertRole" resultType="com.example.demo.pojo.Role">
+        SELECT
+        r.role_id,
+        r.role_name,
+        r.updtime,
+        GROUP_CONCAT(p.power_name ORDER BY p.power_name SEPARATOR ', ') AS powers
+        FROM
+        role r
+        LEFT JOIN
+        role_power rp ON r.role_id = rp.role_id
+        LEFT JOIN
+        power p ON rp.power_id = p.power_id
+        <!-- 以下是添加的动态查询条件部分 -->
+        <where>
+        <if test="roleId!= null and roleId!= ''">
+            AND r.role_id LIKE CONCAT('%', #{roleId}, '%')
+        </if>
+        <if test="roleName!= null and roleName!= ''">
+            AND r.role_name LIKE CONCAT('%', #{roleName}, '%')
+        </if>
+        </where>
+        GROUP BY
+        r.role_id
+        ORDER BY
+        r.updtime DESC
+    </select>
+</mapper>

@@ -1,0 +1,56 @@
+# ============================================================
+# 应用配置文件模板
+# 复制此文件为 application.yml 并填入你的真实配置
+# 注意：application.yml 已加入 .gitignore，请勿提交真实凭据
+# ============================================================
+
+server:
+  port: 8080
+
+spring:
+  redis:
+    host: localhost          # Redis 地址
+    port: 6379
+    password:                # Redis 密码（本地通常为空）
+    time-to-live: 3600000
+  datasource:
+    hikari:
+      max-lifetime: 300000
+      idle-timeout: 60000
+      connection-timeout: 30000
+      validation-timeout: 5000
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/powersystem?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=Asia/Shanghai
+    username: root           # 替换为你的数据库用户名
+    password:                # 替换为你的数据库密码
+  jackson:
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+
+# 阿里云 OSS 配置（文件上传功能需要）
+aliyun:
+  oss:
+    endpoint: https://oss-cn-hangzhou.aliyuncs.com
+    accessKeyId:         # 替换为你的 AccessKeyId
+    accessKeySecret:     # 替换为你的 AccessKeySecret
+
+# DeepSeek API 配置（AI 对话功能需要）
+deepseek:
+  api:
+    key:                  # 替换为你的 DeepSeek API Key
+
+logging:
+  level:
+    com.example.turbine: debug
+  file:
+    name: logs/application.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"

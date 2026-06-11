@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.PredictionMapper">
+    <select id="ifSelect" resultType="com.example.demo.pojo.Prediction">
+
+        SELECT
+        a.predict_id, a.predict_model, a.user_id, a.predict_time, b.user_name,c.dataset_name
+        FROM
+        powersystem.predict a,powersystem.user b,powersystem.dataset c
+        <!-- 以下是添加的动态查询条件部分 -->
+        <where>
+            <if test="predictId != null and predictId != ''">
+                AND a.predict_id LIKE CONCAT('%', #{predictId}, '%')
+            </if>
+            <if test="userId != null and userId != ''">
+                AND a.user_id LIKE CONCAT('%', #{userId}, '%')
+            </if>
+            <if test="predictModel != null and predictModel != ''">
+                AND predict_model LIKE CONCAT('%', #{predictModel}, '%')
+            </if>
+            <if test="updateTimeStart != null and updateTimeStart != '' and updateTimeEnd != null and updateTimeEnd != ''">
+                AND DATE_FORMAT(predict_time, '%Y-%m-%d') BETWEEN #{updateTimeStart} AND #{updateTimeEnd}
+            </if>
+            AND a.user_id=b.user_id AND a.dataset_id=c.dataset_id
+        </where>
+        order by a.predict_time desc
+    </select>
+
+
+
+
+</mapper>

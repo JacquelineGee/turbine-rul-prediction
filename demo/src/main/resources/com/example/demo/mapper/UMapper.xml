@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UMapper">
+    <insert id="addUser">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId!= null">
+                user_id,
+            </if>
+            <if test="userName!= null">
+                user_name,
+            </if>
+            <if test="userPassword!= null">
+                user_password,
+            </if>
+            <if test="gender!= null">
+                gender,
+            </if>
+            <if test="image!= null and image!= ''">
+                image,
+            </if>
+            <if test="phone!= null and phone!= ''">
+                phone,
+            </if>
+            <if test="email!= null and email!= ''">
+                email,
+            </if>
+            updtime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId!= null">
+                #{userId},
+            </if>
+            <if test="userName!= null">
+                #{userName},
+            </if>
+            <if test="userPassword!= null">
+                #{userPassword},
+            </if>
+            <if test="gender!= null">
+                #{gender},
+            </if>
+            <if test="image!= null and image!= ''">
+                #{image},
+            </if>
+            <if test="phone!= null and phone!= ''">
+                #{phone},
+            </if>
+            <if test="email!= null and email!= ''">
+                #{email},
+            </if>
+            now()
+        </trim>
+
+</insert>
+
+    <update id="upu">
+        update user
+        <set>
+            <if test="userId!= null and userId!= ''">User_id=#{userId},</if>
+            <if test="userName!= null and userName!= ''">User_name=#{userName},</if>
+            <if test="gender!= null">gender=#{gender},</if>
+            <if test="userPassword!= null and userPassword!= ''">User_password=#{userPassword},</if>
+            <if test="image!= null and image!= ''">image=#{image},</if>
+            <if test="phone!= null and phone!= ''">phone=#{phone},</if>
+            <if test="email!= null and email!= ''">email=#{email},</if>
+            updtime=now(),
+            version=version+1
+        </set>
+        where User_id=#{userId}
+    </update>
+    <select id="ifUser" resultType="com.example.demo.pojo.U">
+        SELECT
+        u.user_id,
+        u.user_name,
+        u.image,
+        u.gender,
+        u.updtime,
+        GROUP_CONCAT(r.role_name ORDER BY r.role_name SEPARATOR ', ') AS roles
+        FROM
+        user u
+        LEFT JOIN
+        user_role ur ON u.user_id = ur.user_id
+        LEFT JOIN
+        role r ON ur.role_id = r.role_id
+        <where>
+            <if test="userName!= null and userName!= ''">
+                u.user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="gender!= null and gender!= ''">
+                AND u.gender = #{gender}
+            </if>
+            <if test="userId!= null and userId!= ''">
+                AND u.user_id LIKE CONCAT('%', #{userId}, '%')
+            </if>
+        </where>
+        GROUP BY
+        u.user_id
+        ORDER BY
+        u.updtime DESC
+    </select>
+</mapper>
