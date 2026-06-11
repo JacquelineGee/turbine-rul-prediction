@@ -78,7 +78,7 @@
 | `vue-project-demo/` | 管理端前端 | 7000 |
 | `demo/` | Spring Boot 后端 | 8080 |
 | `Turbofan-engine-RUL-prediction/` | Python Flask ML 推理服务 | 5000 |
-| `predictive-maintenance-using-machine-learning-master/` | 外部参考项目 | — |
+| `design-images/` | 界面截图（仅 thumb_ 缩略图需上传） | — |
 
 ## 环境要求
 
@@ -177,6 +177,31 @@ NASA C-MAPSS (Commercial Modular Aero-Propulsion System Simulation) 涡扇发动
 
 每个样本含 21 个传感器测量值 + 3 个操作设置参数。
 
+## 界面展示
+
+### 用户端
+
+| 首页 | 登录 |
+|---|---|
+| ![首页](design-images/thumb_homepage.png) | ![登录](design-images/thumb_login.png) |
+
+| 3D 轮机结构 | 轮机详情 |
+|---|---|
+| ![3D轮机结构](design-images/thumb_turbine-structure.png) | ![轮机详情](design-images/thumb_turbine-detail.png) |
+
+| 预测结果 | AI 智能对话 |
+|---|---|
+| ![预测结果](design-images/thumb_predict-lstm.png) | ![AI对话](design-images/thumb_ai-chat1.png) |
+
+| 数据可视化 |
+|---|
+| ![数据可视化](design-images/thumb_history-detail.png) |
+
+### 管理端
+
+| 后台首页 | 用户管理 |
+|---|---|
+| ![后台首页](design-images/thumb_admin-dashboard.png) | ![用户管理](design-images/thumb_admin-users.png) |
 
 ## 配置文件说明
 
